@@ -1,0 +1,12 @@
+<!--pages/inner/index.wxml-->
+<import src="../../wxParse/wxParse.wxml"/>
+<view class="article">
+  <view class="hd">{{hd.title}}</view>
+  <view class="info">
+    <view class="time">{{hd.time}}</view>
+    <view class="channel">{{hd.origin}}</view>    
+  </view>
+  <view class="body">
+    <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+  </view>
+</view>

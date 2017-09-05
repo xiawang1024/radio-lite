@@ -1,0 +1,21 @@
+<!--pages/radio/index.wxml-->
+<view class="g-radio">
+  <view class="list" wx:for="{{liveList}}" wx:key="{{item.cid}}" bindtap="play" data-index="{{index}}" data-streams="{{item.streams}}">
+      <view class="logo-wrap" >
+        <image src="{{'http://program.hndt.com' + item.image}}" class="logo-img"></image>        
+      </view>
+      <view class="text-wrap" >        
+        <view class="name-blue" wx:if="{{currentIndex == index}}">{{item.name}}</view>
+        <view class="name" wx:else>{{item.name}}</view>
+        <view class="live">
+          <image src="/imgs/LIVE.png" class="live-icon"></image>
+          <view class="live-text">{{item.live}}</view>
+        </view>
+      </view>
+      <view class="play-icon"  >
+        <image src="/imgs/play.png" class="icon" wx:if="{{currentIndex == index}}"  mode="scaleToFill"></image>   
+        <image src="/imgs/pause.png" class="icon" wx:else mode="scaleToFill"></image>
+      </view>
+  </view>
+  <audio id="myAudio" src="http://stream.hndt.com:1935/live/yingshi/playlist.m3u8"></audio>
+</view>

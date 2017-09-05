@@ -1,0 +1,69 @@
+/* pages/radio/index.wxss */
+.list{
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width:100%;
+  box-sizing: border-box;
+  padding:0 30rpx;
+  height: 200rpx;
+  border-bottom:1px solid #e5e5e5;
+}
+.logo-wrap{
+  position: relative;
+   width: 170rpx; 
+  align-self: center;
+  font-size: 0;
+}
+.logo-wrap .icon{
+  position: absolute;
+  left:50%;
+  top:50%;
+  transform: translate3d(-50%,-50%,0);
+  width: 80rpx;
+  height: 80rpx;
+}
+.logo-img{
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border:1px solid #eeeeee;
+  vertical-align: middle;
+}
+.logo-img.live{
+  border: 1px solid #0081dc;
+}
+.text-wrap{
+  margin-left: 30rpx;
+  flex:1;
+  align-self: center
+}
+.name-blue{
+  color:#0081dc;
+}
+.live{
+  vertical-align: middle;
+  margin-top: 10rpx;
+  font-size: 36rpx;
+  color:#666;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 400rpx;
+}
+.live-icon{
+  vertical-align: middle;
+  display: inline-block;
+  height: 80rpx;
+  width: 80rpx
+}
+.live-text{
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 12rpx;
+}
+.play-icon .icon{
+  display: inline-block;
+  width:80rpx;
+  height: 80rpx;
+}

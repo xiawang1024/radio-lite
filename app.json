@@ -1,0 +1,39 @@
+{
+  "pages":[    
+    "pages/index/index",
+    "pages/radio/index",
+    "pages/inner/index",    
+    "pages/logs/logs"
+  ],
+  "window":{
+    "backgroundColor":"#ffffff",
+    "backgroundTextStyle":"dark",
+    "navigationBarBackgroundColor": "#0081dc",
+    "navigationBarTitleText": "河南广播",
+    "navigationBarTextStyle":"white",
+    "enablePullDownRefresh": true,
+    "onReachBottomDistance":100
+  },
+  "tabBar":{
+    "borderStyle":"black",
+    "list":[
+      {
+        "text": "刷新闻",
+        "pagePath":"pages/index/index",
+        "iconPath":"imgs/news.png",
+        "selectedIconPath":"imgs/news_HL.png"
+      },
+      {
+        "text": "听广播",
+        "pagePath":"pages/radio/index",
+        "iconPath": "imgs/radio.png",
+        "selectedIconPath": "imgs/radio_HL.png"
+      }
+    ],
+    "position":"bottom",
+    "color": "#666666",
+    "selectedColor":"#0081dc",
+    "backgroundColor":"#ffffff",
+    "borderStyle":"white"
+  }
+}
