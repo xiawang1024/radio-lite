@@ -11,7 +11,7 @@
         <text wx:else class='back-icon'>回听</text>
         {{channelInfo.live}}
       </view>
-      <slider bindchange="slider4change" min="50" max="200"/>
+      <slider bindchange="slider4change" min="0" max="100" activeColor="#0081dc" value="{{audioPercent}}"/>
     </view>
   </view>
   <view class='time-wrap'>
@@ -32,4 +32,5 @@
       <text wx:if="{{item.playUrl}}" class='back-icon'>回听</text>
     </view>
   </scroll-view>
+  <audio id="wxAudio" src="http://stream.hndt.com:1935/live/yingshi/playlist.m3u8" bindtimeupdate="timeupdate"></audio>
 </view>

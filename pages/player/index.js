@@ -14,7 +14,8 @@ Page({
     isLiveIndex:0,
     isToday:true,
     isPlayIndex:0,
-    isShowLive:true
+    isShowLive:true,
+    audioPercent:0
   },
 
   /**
@@ -171,10 +172,18 @@ Page({
     })
     //音频源
     console.log(src)
-    this.audioCtx.setSrc('http://stream.hndt.com:1935/live/yingshi/playlist.m3u8')
+    this.audioCtx.setSrc('http://owaup0bqu.bkt.clouddn.com/0802%20%E6%B2%B3%E5%8D%97%E5%B9%BF%E6%92%ADAPP%E5%AE%A3%E4%BC%A0%EF%BC%88%E6%A6%82%E5%BF%B5%E7%AF%87%E4%B8%8B%E7%AF%87%EF%BC%89%20Banana%20Studio%E5%87%BA%E5%93%81.mp3')
     this.audioCtx.play()
   },
-  
+  timeupdate(event) {
+    let detail = event.detail
+    let currentTime = detail.currentTime
+    let duration = detail.duration
+    this.setData({
+      audioPercent: currentTime / duration * 100 | 0 
+    })
+    console.log(detail)
+  },
   /**
    * 用户点击右上角分享
    */

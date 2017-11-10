@@ -4,7 +4,6 @@
     "pages/index/index",
     "pages/radio/index",
     "pages/inner/index",
-    
     "pages/logs/logs"
   ],
   "window": {
