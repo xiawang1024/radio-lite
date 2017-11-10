@@ -7,8 +7,8 @@
     <view class='info'>
       <text class='channel-name'>{{channelInfo.name}}</text>
       <view class='playing-name'>
-        <image src='/imgs/LIVE.png' class="live-icon"></image>
-        <text class='back-icon'>回听</text>
+        <image wx:if="{{isShowLive}}" src='/imgs/LIVE.png' class="live-icon"></image>
+        <text wx:else class='back-icon'>回听</text>
         {{channelInfo.live}}
       </view>
       <slider bindchange="slider4change" min="50" max="200"/>
@@ -25,10 +25,11 @@
     </view>
   </view>
   <scroll-view class='program-list' scroll-y>
-    <view wx:for="{{programList}}" class='item'>
+    <view wx:for="{{programList}}" class='item' wx:for-index="idx" data-liveSrc="{{isLiveIndex == idx && isToday ? channelInfo.streams[0] : ''}}" data-isToday="{{isToday}}" data-liveindex="{{isLiveIndex}}" data-index="{{idx}}" data-src="{{item.playUrl ? item.playUrl : ''}}" bindtap="playBack">
       <text class='time'>{{item.begin}}-{{item.end}}</text>
       <text class="title">{{item.title}}</text>
-      <image src='/imgs/LIVE.png' class="live-icon"></image>
+      <image wx:if="{{isLiveIndex == idx && isToday}}" src='/imgs/LIVE.png' class="live-icon"></image>
+      <text wx:if="{{item.playUrl}}" class='back-icon'>回听</text>
     </view>
   </scroll-view>
 </view>

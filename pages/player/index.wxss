@@ -45,9 +45,11 @@
   height: 80rpx;
 }
 .playing-name .back-icon{
+  display: inline-block;
   border:1px solid #999999;
   font-size: 24rpx;
   padding:0rpx 8rpx;
+  margin:20rpx 0;
   border-radius: 6rpx;
 }
 .time-wrap{
@@ -93,4 +95,14 @@
   align-self: flex-end;
   width: 90rpx;
   height: 90rpx;
+}
+.item .back-icon{
+  display: inline-block;
+  width: 90rpx;
+  /* height: 90rpx;
+  line-height: 90rpx; */
+  text-align: center;
+  border:1px solid #999999;
+  border-radius: 6rpx;
+  font-size: 30rpx;
 }

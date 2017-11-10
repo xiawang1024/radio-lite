@@ -10,7 +10,11 @@ Page({
     date:'',
     today:'',
     channelInfo:{},
-    programList:[]
+    programList:[],
+    isLiveIndex:0,
+    isToday:true,
+    isPlayIndex:0,
+    isShowLive:true
   },
 
   /**
@@ -25,30 +29,44 @@ Page({
       date : today,
       today : today
     })
-    this._fetch(7, this._timeToStamp(today + timeSuffix))
+    this._fetch(7, this._timeToStamp(today + timeSuffix)).then((res) => {
+      this.setData({
+        isLiveIndex:res
+      })
+      setTimeout(() => {
+
+      },20)
+    })
     
   },
   _fetch(cid, stamp) {
     wx.showLoading({
       title: "加载中..."
     })
-    api.clickItem(cid, stamp).then((res) => {
-      console.log(res)
-      this.setData({
-        channelInfo: res,
-        programList: this._createArr(res.programs)
-      })
+    return new Promise((resolve,reject) => {
+      api.clickItem(cid, stamp).then((res) => {
+        console.log(res)
+        let programs = res.programs;
+        let playIndex = this._isPlay(programs)
 
-      setTimeout(() => {
-        wx.hideLoading()
-      }, 20)
+        this.setData({
+          isPlayIndex: playIndex,
+          channelInfo: res,
+          programList: this._createArr(programs)
+        })
+
+        setTimeout(() => {
+          wx.hideLoading()
+        }, 20)
+        resolve(playIndex)
+      })
     })
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    
+    this.audioCtx = wx.createAudioContext('wxAudio')
   },
 
   /**
@@ -108,10 +126,55 @@ Page({
     console.log('picker发送选择改变，携带值为', e.detail.value)
     let date = e.detail.value;
     this._fetch(7, this._timeToStamp(date + timeSuffix))
+    if(date == this.today) {
+      this.setData({
+        isToday:true
+      })
+    }else {
+      this.setData({
+        isToday: false
+      })
+    }
     this.setData({
       date
     })
   },
+  _isPlay(programs) {
+    let currentTime = (new Date()).getTime() / 1000 | 0;//当前时间时间戳
+    let index = 0
+    for (let i = 0; i < programs.length; i++) {
+      let item = programs[i];
+      if (currentTime <= item.endTime && currentTime >= item.beginTime) {
+        return i
+      }
+    }
+  },
+  playBack(event) {
+    let dataset = event.currentTarget.dataset
+    let src = dataset.src || dataset.livesrc
+    let index = dataset.index
+    let liveIndex = dataset.liveindex
+    let isToday = dataset.istoday
+    setTimeout(() => {
+      if (isToday && index == liveIndex) {
+        this.setData({
+          isShowLive: true
+        })
+      } else {
+        this.setData({
+          isShowLive: false
+        })
+      }
+    },20)
+    this.setData({
+      isPlayIndex: index
+    })
+    //音频源
+    console.log(src)
+    this.audioCtx.setSrc('http://stream.hndt.com:1935/live/yingshi/playlist.m3u8')
+    this.audioCtx.play()
+  },
+  
   /**
    * 用户点击右上角分享
    */
