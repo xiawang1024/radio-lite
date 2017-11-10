@@ -41,8 +41,20 @@ const getLiveList = (id) => {
   })
 }
 
+const clickItem = (channelId, time) => {
+  return new Promise((resolve,reject) => {
+    wx.request({
+      url: 'http://program.hndt.com/get/vod/'+ channelId + '/' + time,
+      success:(res) => {
+        resolve(res.data)
+      }
+    })
+  })
+}
+
 module.exports = {
   getNewsList,
   getArticleById,
-  getLiveList
+  getLiveList,
+  clickItem
 }

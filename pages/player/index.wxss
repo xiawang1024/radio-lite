@@ -1,12 +1,5 @@
 /* pages/player/index.wxss */
 .play{
-  position: fixed;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  width: 100%;
-  height: 100%;
   /* display: flex; */
   /* flex-direction: column; */
   overflow: hidden;
@@ -21,42 +14,83 @@
   border-bottom:1px solid #e5e5e5;
 }
 .logo-wrap{
-  flex:1;
+  width: 260rpx;
   text-align: center;
 }
 .logo-img{
-  width: 90%;
+  width: 240rpx;
   border-radius: 50%;
   border:1px solid #e5e5e5;
 }
 .info{
   position: relative;
-  flex:2;
+  flex:1;
   padding-left:16rpx;
 }
 .channel-name{
   display: block;
   margin-bottom: 8rpx;
+  font-size: 34rpx;
 }
 .playing-name{
   display: block;
   margin-bottom:8rpx;
   overflow: hidden;
+  font-size: 34rpx;
+  /* vertical-align: middle; */
+}
+.playing-name .live-icon{
+  vertical-align: middle;
+  width: 80rpx;
+  height: 80rpx;
+}
+.playing-name .back-icon{
+  border:1px solid #999999;
+  font-size: 24rpx;
+  padding:0rpx 8rpx;
+  border-radius: 6rpx;
 }
 .time-wrap{
   display: flex;
   width: 100%;
-   height: 120rpx; 
+  height: 100rpx; 
   padding:20rpx 0;
   align-items: center;
   justify-content: space-around;
   border-bottom:1px solid #e5e5e5;
   box-sizing: border-box;
+  font-size: 36rpx;
 }
-.program-wrap{
+.time-wrap .title{
+  font-weight: bold;
+}
+.program-list{
   position: absolute;
-  top:360rpx;
+  top:400rpx;
   bottom:0;
   /* flex:1; */
   overflow: hidden;
+}
+.item{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100rpx;
+  padding:0 16rpx 0 0;
+  box-sizing: border-box;
+  border-bottom:1px solid #e5e5e5;
+  font-size: 36rpx;
+}
+.item .time{
+  width: 280rpx;
+  text-align: center;
+  white-space: nowrap;
+}
+.item .title{
+  flex:1;
+}
+.item .live-icon{
+  align-self: flex-end;
+  width: 90rpx;
+  height: 90rpx;
 }
