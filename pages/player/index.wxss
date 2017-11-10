@@ -1,0 +1,62 @@
+/* pages/player/index.wxss */
+.play{
+  position: fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  width: 100%;
+  height: 100%;
+  /* display: flex; */
+  /* flex-direction: column; */
+  overflow: hidden;
+}
+.hd{
+  display: flex;
+  width: 100%;
+  height: 300rpx;  
+  padding:20rpx 10rpx;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom:1px solid #e5e5e5;
+}
+.logo-wrap{
+  flex:1;
+  text-align: center;
+}
+.logo-img{
+  width: 90%;
+  border-radius: 50%;
+  border:1px solid #e5e5e5;
+}
+.info{
+  position: relative;
+  flex:2;
+  padding-left:16rpx;
+}
+.channel-name{
+  display: block;
+  margin-bottom: 8rpx;
+}
+.playing-name{
+  display: block;
+  margin-bottom:8rpx;
+  overflow: hidden;
+}
+.time-wrap{
+  display: flex;
+  width: 100%;
+   height: 120rpx; 
+  padding:20rpx 0;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom:1px solid #e5e5e5;
+  box-sizing: border-box;
+}
+.program-wrap{
+  position: absolute;
+  top:360rpx;
+  bottom:0;
+  /* flex:1; */
+  overflow: hidden;
+}

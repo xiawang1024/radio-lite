@@ -39,6 +39,9 @@ Page({
     this.audioCtx = wx.createAudioContext('myAudio')
   },
   play(e){
+    wx.navigateTo({
+      url: '/pages/player/index',
+    })
     let index = e.currentTarget.dataset.index;
     let streams = e.currentTarget.dataset.streams;
     if (this.data.currentIndex == index) {

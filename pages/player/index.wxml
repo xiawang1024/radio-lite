@@ -1,0 +1,30 @@
+<!--pages/player/index.wxml-->
+<view class='player'>
+  <view class='hd'>
+    <view class="logo-wrap" >
+      <image src="http://program.hndt.com/files/images/2017/08/01/1501575231656489.png" class="logo-img" mode="widthFix"></image> 
+    </view>
+    <view class='info'>
+      <text class='channel-name'>音乐广播</text>
+      <text class='playing-name'>魅力快乐</text>
+      <slider bindchange="slider4change" min="50" max="200"/>
+    </view>
+  </view>
+  <view class='time-wrap'>
+    <text class='title'>节目列表</text>
+    <view class='time'>
+      <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+        <view class="picker">
+          点播: {{date}}
+        </view>
+      </picker>
+    </view>
+  </view>
+  <view class='program-wrap'>
+    <scroll-view class='program-list' scroll-y>
+      <view wx:for="arrayasdfwangxianihaomawotianneshijianhaokuaia,woyaojiehunl">
+        {{item}}
+      </view>
+    </scroll-view>
+  </view>
+</view>
