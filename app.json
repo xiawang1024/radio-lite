@@ -1,8 +1,8 @@
 {
   "pages": [
-    "pages/player/index",
     "pages/index/index",
     "pages/radio/index",
+    "pages/player/index",
     "pages/inner/index",
     "pages/logs/logs"
   ],

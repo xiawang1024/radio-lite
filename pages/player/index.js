@@ -1,27 +1,40 @@
 // pages/player/index.js
 const api = require('../../api/index.js')
 const timeSuffix = ' 00:00:00.0'
+const audioCtx = wx.createInnerAudioContext()
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    date:'',
-    today:'',
+    date:'', //日期
+    today:'', //今天
+    cid:0,
     channelInfo:{},
     programList:[],
-    isLiveIndex:0,
-    isToday:true,
-    isPlayIndex:0,
-    isShowLive:true,
-    audioPercent:0
+    playingName:'',
+    liveStream:'', //直播流
+    isLiveIndex:0, //直播index
+    isToday:true, //是否当天
+    isPlayIndex:0, //正在播放的index
+    isShowLive:true, //是否显示live播放
+    audioPercent:0, 
+    isPlaying:true,
+    currentTime:'00:00',
+    duration:'00:00',
+    scrollTop:300
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let cid = options.cid;
+    this.setData({
+      cid
+    })
     wx.showLoading({
       title: "加载中..."
     })
@@ -30,7 +43,7 @@ Page({
       date : today,
       today : today
     })
-    this._fetch(7, this._timeToStamp(today + timeSuffix)).then((res) => {
+    this._fetch(cid, this._timeToStamp(today + timeSuffix)).then((res) => {
       this.setData({
         isLiveIndex:res
       })
@@ -48,9 +61,13 @@ Page({
       api.clickItem(cid, stamp).then((res) => {
         console.log(res)
         let programs = res.programs;
+        let liveStream = res.streams[0];
+        let playingName = res.live;
         let playIndex = this._isPlay(programs)
-
+        audioCtx.src = liveStream
         this.setData({
+          liveStream,
+          playingName,
           isPlayIndex: playIndex,
           channelInfo: res,
           programList: this._createArr(programs)
@@ -67,9 +84,51 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.audioCtx = wx.createAudioContext('wxAudio')
+    setTimeout(() => {
+      audioCtx.onPlay(() => {
+        this.setData({
+          isPlaying: true
+        })
+      })
+      audioCtx.onPause(() => {
+        this.setData({
+          isPlaying: false
+        })
+      })
+      audioCtx.onTimeUpdate(() => {
+        this._timeupdate(audioCtx)
+      })
+      audioCtx.onSeeking(() => {
+        this._timeupdate(audioCtx)
+        // audioCtx.pause()
+        // console.log('pause')
+      })
+      audioCtx.onSeeked(() => {
+        this._timeupdate(audioCtx)
+      })
+    }, 20)
+    audioCtx.autoplay = true;
+    audioCtx.obeyMuteSwitch = false
+    
   },
-
+  //播放暂停
+  switchPlayState() {
+    if (audioCtx.paused) {
+      audioCtx.play()
+    }else{
+      audioCtx.pause()
+    }
+  },
+  //播放进度条拖拽
+  sliderchange(event) {
+    let val = event.detail.value;
+    this.setData({
+      audioPercent: val
+    })
+    let duration = audioCtx.duration;
+    let current = duration * 0.01 * val | 0
+    audioCtx.seek(current)
+  },
   /**
    * 生命周期函数--监听页面显示
    */
@@ -92,6 +151,12 @@ Page({
     }
 
     return newArr
+  },
+  _formatPlayTime(interval) {
+    interval = interval | 0
+    const minute = this._pad(interval / 60 | 0)
+    const second = this._pad(interval % 60)
+    return `${minute}:${second}`
   },
   _format(interval) {
     let val = parseInt(interval) * 1000;
@@ -123,11 +188,13 @@ Page({
     var timestamp = new Date(date).getTime();
     return timestamp / 1000;
   },
-  bindDateChange: function (e) {
+  bindDateChange(e) {
     console.log('picker发送选择改变，携带值为', e.detail.value)
     let date = e.detail.value;
-    this._fetch(7, this._timeToStamp(date + timeSuffix))
-    if(date == this.today) {
+    let today = this._getToDay()
+    this._fetch(this.cid, this._timeToStamp(date + timeSuffix))
+    console.log(date, today)
+    if (date == today) {
       this.setData({
         isToday:true
       })
@@ -150,12 +217,15 @@ Page({
       }
     }
   },
+  //列表点击播放
   playBack(event) {
     let dataset = event.currentTarget.dataset
     let src = dataset.src || dataset.livesrc
+    let playname = dataset.playname
     let index = dataset.index
     let liveIndex = dataset.liveindex
-    let isToday = dataset.istoday
+    let isToday = parseInt(dataset.istoday)
+    
     setTimeout(() => {
       if (isToday && index == liveIndex) {
         this.setData({
@@ -168,22 +238,27 @@ Page({
       }
     },20)
     this.setData({
+      playingName: playname,
       isPlayIndex: index
     })
     //音频源
     console.log(src)
-    this.audioCtx.setSrc('http://owaup0bqu.bkt.clouddn.com/0802%20%E6%B2%B3%E5%8D%97%E5%B9%BF%E6%92%ADAPP%E5%AE%A3%E4%BC%A0%EF%BC%88%E6%A6%82%E5%BF%B5%E7%AF%87%E4%B8%8B%E7%AF%87%EF%BC%89%20Banana%20Studio%E5%87%BA%E5%93%81.mp3')
-    this.audioCtx.play()
+    audioCtx.src = src
+    setTimeout(() => {
+      audioCtx.play()
+    }, 20)
   },
-  timeupdate(event) {
-    let detail = event.detail
-    let currentTime = detail.currentTime
-    let duration = detail.duration
+  //播放进度条更新
+  _timeupdate(audio) {
+    let currentTime = audio.currentTime
+    let duration = audio.duration
     this.setData({
-      audioPercent: currentTime / duration * 100 | 0 
+      audioPercent: currentTime / duration * 100 | 0,
+      duration: this._formatPlayTime(duration),
+      currentTime: this._formatPlayTime(currentTime) 
     })
-    console.log(detail)
   },
+  
   /**
    * 用户点击右上角分享
    */

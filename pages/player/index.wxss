@@ -1,8 +1,17 @@
 /* pages/player/index.wxss */
-.play{
-  /* display: flex; */
-  /* flex-direction: column; */
-  overflow: hidden;
+@keyframes circle {
+  0%{
+    transform: rotate(0)
+  }
+  100%{
+    transform: rotate(360deg)
+  }
+}
+.wx-slider-handle{
+  /* width: 40rpx!important;
+  height: 40rpx!important;
+  margin-top: -20rpx!important;
+  transform: translateX(10rpx) */
 }
 .hd{
   display: flex;
@@ -12,15 +21,33 @@
   align-items: center;
   box-sizing: border-box;
   border-bottom:1px solid #e5e5e5;
+  overflow: hidden;
 }
 .logo-wrap{
+  position: relative;
   width: 260rpx;
   text-align: center;
 }
 .logo-img{
   width: 240rpx;
+  height: 240rpx;
   border-radius: 50%;
   border:1px solid #e5e5e5;
+  animation-delay: .5s;
+  /* animation: circle 20s linear infinite;  */
+  animation-play-state: paused; 
+}
+.player .logo-img{
+  animation: circle 10s linear infinite;  
+  animation-play-state: running;
+}
+.playState, .pauseState{
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate3d(-50%,-50%,0);
+  width: 120rpx;
+  height: 120rpx;
 }
 .info{
   position: relative;
@@ -29,14 +56,17 @@
 }
 .channel-name{
   display: block;
-  margin-bottom: 8rpx;
+  margin: 12rpx 0 8rpx 0;
   font-size: 34rpx;
+  font-weight: bold;
 }
 .playing-name{
   display: block;
   margin-bottom:8rpx;
   overflow: hidden;
   font-size: 34rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   /* vertical-align: middle; */
 }
 .playing-name .live-icon{
@@ -51,6 +81,26 @@
   padding:0rpx 8rpx;
   margin:20rpx 0;
   border-radius: 6rpx;
+}
+.play-time {
+  position: relative;
+  /* top:-0rpx; */
+  width: 100%;
+  height: 60rpx;
+}
+.current{
+  position: absolute;
+  top: 0;
+  left:0;
+  font-size: 26rpx;
+  color: #666666;
+}
+.duration{
+  position: absolute;
+  top: 0;
+  right:0;
+  font-size: 26rpx;
+  color:#666666;
 }
 .time-wrap{
   display: flex;
@@ -90,6 +140,10 @@
 }
 .item .title{
   flex:1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 12rpx;
 }
 .item .live-icon{
   align-self: flex-end;

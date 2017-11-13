@@ -36,31 +36,29 @@ Page({
         }, 20)
       })      
     })
-    this.audioCtx = wx.createAudioContext('myAudio')
+    
   },
   play(e){
-    // wx.navigateTo({
-    //   url: '/pages/player/index',
-    // })
+    
     let index = e.currentTarget.dataset.index;
     let streams = e.currentTarget.dataset.streams;
+    let cid = e.currentTarget.dataset.cid;
     if (this.data.currentIndex == index) {
-      this.audioCtx.pause()
+      
       this.setData({
         currentIndex: -1
       })
     }else{
-      this.setSrc(streams)
+      
       this.setData({
         currentIndex: index
       })
     } 
-    
+    wx.navigateTo({
+      url: '/pages/player/index?cid=' + cid,
+    })
   },
-  setSrc(src){
-    this.audioCtx.setSrc(src)
-    this.audioCtx.play()
-  },
+  
   
   /**
    * 页面相关事件处理函数--监听用户下拉动作

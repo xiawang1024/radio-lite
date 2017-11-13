@@ -1,6 +1,6 @@
 <!--pages/radio/index.wxml-->
 <view class="g-radio">
-  <view class="list" wx:for="{{liveList}}" wx:key="{{item.cid}}" bindtap="play" data-index="{{index}}" data-streams="{{item.streams}}">
+  <view class="list" wx:for="{{liveList}}" wx:key="{{item.cid}}" bindtap="play" data-cid="{{item.cid}}" data-index="{{index}}" data-streams="{{item.streams}}">
       <view class="logo-wrap" >
         <image src="{{'http://program.hndt.com' + item.image}}" class="logo-img"></image>        
       </view>

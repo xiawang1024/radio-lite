@@ -1,17 +1,25 @@
 <!--pages/player/index.wxml-->
-<view class='player'>
+<view class="{{isPlaying ? 'player' : ''}}">
   <view class='hd'>
     <view class="logo-wrap" >
       <image wx:if="{{channelInfo && channelInfo.image}}" src="{{'http://program.hndt.com' + channelInfo.image}}" class="logo-img" mode="widthFix"></image> 
+      <view class='switch' bindtap='switchPlayState'>
+        <image hidden="{{isPlaying}}" class="playState" src='/imgs/play-icon.svg'></image>
+        <image hidden="{{!isPlaying}}" class="pauseState" src='/imgs/pause-icon.svg'></image>
+      </view>
     </view>
     <view class='info'>
       <text class='channel-name'>{{channelInfo.name}}</text>
       <view class='playing-name'>
         <image wx:if="{{isShowLive}}" src='/imgs/LIVE.png' class="live-icon"></image>
         <text wx:else class='back-icon'>回听</text>
-        {{channelInfo.live}}
+        {{playingName}}
       </view>
-      <slider bindchange="slider4change" min="0" max="100" activeColor="#0081dc" value="{{audioPercent}}"/>
+      <slider bindchange="sliderchange" min="0" max="100" activeColor="#0081dc" value="{{audioPercent}}" disabled="{{isShowLive}}"/>
+      <view class='play-time'>
+        <text class='current'>{{currentTime}}</text>
+        <text class='duration'>{{duration}}</text>
+      </view>
     </view>
   </view>
   <view class='time-wrap'>
@@ -24,13 +32,12 @@
       </picker>
     </view>
   </view>
-  <scroll-view class='program-list' scroll-y>
-    <view wx:for="{{programList}}" class='item' wx:for-index="idx" data-liveSrc="{{isLiveIndex == idx && isToday ? channelInfo.streams[0] : ''}}" data-isToday="{{isToday}}" data-liveindex="{{isLiveIndex}}" data-index="{{idx}}" data-src="{{item.playUrl ? item.playUrl : ''}}" bindtap="playBack">
+  <scroll-view class='program-list' scroll-y  scroll-into-view="isLive">
+    <view wx:for="{{programList}}" class='item' id="{{isLiveIndex == idx && isToday ? 'isLive' : ''}}" wx:for-index="idx" data-playName="{{item.title}}" data-liveSrc="{{isLiveIndex == idx && isToday ? channelInfo.streams[0] : ''}}" data-isToday="{{isToday ? 1 : 0}}" data-liveindex="{{isLiveIndex}}" data-index="{{idx}}" data-src="{{item.playUrl ? item.playUrl : ''}}" bindtap="playBack">
       <text class='time'>{{item.begin}}-{{item.end}}</text>
       <text class="title">{{item.title}}</text>
       <image wx:if="{{isLiveIndex == idx && isToday}}" src='/imgs/LIVE.png' class="live-icon"></image>
       <text wx:if="{{item.playUrl}}" class='back-icon'>回听</text>
     </view>
   </scroll-view>
-  <audio id="wxAudio" src="http://stream.hndt.com:1935/live/yingshi/playlist.m3u8" bindtimeupdate="timeupdate"></audio>
 </view>
