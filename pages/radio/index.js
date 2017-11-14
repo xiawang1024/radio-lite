@@ -54,7 +54,7 @@ Page({
         currentIndex: index
       })
     } 
-    if(cid < 12) {
+    if (cid != 17 && cid != 18 && cid != 19 && cid != 20 && cid != 21 && cid != 22 && cid != 23) {
       this.audioCtx.pause()
       wx.navigateTo({
         url: '/pages/player/index?cid=' + cid,

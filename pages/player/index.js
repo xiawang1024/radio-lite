@@ -15,11 +15,11 @@ Page({
     programList:[],
     playingName:'',
     liveStream:'', //直播流
-    isLiveIndex:0, //直播index
+    isLiveIndex:-1, //直播index
     isToday:true, //是否当天
-    isPlayIndex:0, //正在播放的index
+    isPlayIndex:-1, //正在播放的index
     isShowLive:true, //是否显示live播放
-    audioPercent:0, 
+    audioPercent:-1, 
     isPlaying:true,
     currentTime:'00:00',
     duration:'00:00',
