@@ -29,7 +29,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad(options) {
     let cid = options.cid;
     this.cid = cid
     wx.showLoading({
@@ -46,12 +46,16 @@ Page({
         this.setData({
           isLiveIndex: res.playIndex
         })
-      }      
+      }    
+      wx.showModal({
+        title: parseInt(cid) > 11,
+        content: '',
+      })
       setTimeout(() => {
         audioCtx.src = res.liveStream
-      },20)
-    })
-    
+        // audioCtx.src = 'http://lhttp.qingting.fm/live/4576/64k.mp3'
+      }, 20)
+    })    
   },
   _fetch(cid, stamp) {
     wx.showLoading({
@@ -61,7 +65,7 @@ Page({
       api.clickItem(cid, stamp).then((res) => {
         console.log(res)
         let programs = res.programs;
-        if(programs.length>0) {
+        if (programs && programs.length>0) {
           let liveStream = res.streams[0];
           let playingName = res.live;
           let playIndex = this._isPlay(programs)
@@ -78,7 +82,7 @@ Page({
           })
         }else{
           let liveStream = res.streams[0];
-          let playingName = res.live;
+          let playingName = res.live || res.name;
           this.setData({
             liveStream,
             playingName,
@@ -99,7 +103,7 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
+  onReady() {
     setTimeout(() => {
       audioCtx.onPlay(() => {
         this.setData({
@@ -115,9 +119,7 @@ Page({
         this._timeupdate(audioCtx)
       })
       audioCtx.onSeeking(() => {
-        this._timeupdate(audioCtx)
-        // audioCtx.pause()
-        // console.log('pause')
+        this._timeupdate(audioCtx)      
       })
       audioCtx.onSeeked(() => {
         this._timeupdate(audioCtx)
