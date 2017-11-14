@@ -32,12 +32,15 @@
       </picker>
     </view>
   </view>
-  <scroll-view class='program-list' scroll-y  scroll-into-view="isLive">
+  <scroll-view wx:if='{{programList && programList.length > 0}}' class='program-list' scroll-y  scroll-into-view="isLive">
     <view wx:for="{{programList}}" class='item' id="{{isLiveIndex == idx && isToday ? 'isLive' : ''}}" wx:for-index="idx" data-playName="{{item.title}}" data-liveSrc="{{isLiveIndex == idx && isToday ? channelInfo.streams[0] : ''}}" data-isToday="{{isToday ? 1 : 0}}" data-liveindex="{{isLiveIndex}}" data-index="{{idx}}" data-src="{{item.playUrl ? item.playUrl : ''}}" bindtap="playBack">
       <text class='time'>{{item.begin}}-{{item.end}}</text>
       <text class="title">{{item.title}}</text>
       <image wx:if="{{isLiveIndex == idx && isToday}}" src='/imgs/LIVE.png' class="live-icon"></image>
       <text wx:if="{{item.playUrl}}" class='back-icon'>回听</text>
     </view>
+  </scroll-view>
+  <scroll-view wx:else scroll-y class='program-list description'>
+    {{channelInfo.description}}
   </scroll-view>
 </view>

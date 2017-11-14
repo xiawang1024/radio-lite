@@ -11,7 +11,6 @@ Page({
   data: {
     date:'', //日期
     today:'', //今天
-    cid:0,
     channelInfo:{},
     programList:[],
     playingName:'',
@@ -32,9 +31,7 @@ Page({
    */
   onLoad: function (options) {
     let cid = options.cid;
-    this.setData({
-      cid
-    })
+    this.cid = cid
     wx.showLoading({
       title: "加载中..."
     })
@@ -44,11 +41,14 @@ Page({
       today : today
     })
     this._fetch(cid, this._timeToStamp(today + timeSuffix)).then((res) => {
-      this.setData({
-        isLiveIndex:res
-      })
+      console.log(res)
+      if(res.playIndex) {
+        this.setData({
+          isLiveIndex: res.playIndex
+        })
+      }      
       setTimeout(() => {
-
+        audioCtx.src = res.liveStream
       },20)
     })
     
@@ -61,22 +61,38 @@ Page({
       api.clickItem(cid, stamp).then((res) => {
         console.log(res)
         let programs = res.programs;
-        let liveStream = res.streams[0];
-        let playingName = res.live;
-        let playIndex = this._isPlay(programs)
-        audioCtx.src = liveStream
-        this.setData({
-          liveStream,
-          playingName,
-          isPlayIndex: playIndex,
-          channelInfo: res,
-          programList: this._createArr(programs)
-        })
+        if(programs.length>0) {
+          let liveStream = res.streams[0];
+          let playingName = res.live;
+          let playIndex = this._isPlay(programs)
 
+          this.setData({
+            liveStream,
+            playingName,
+            isPlayIndex: playIndex,
+            channelInfo: res,
+            programList: this._createArr(programs)
+          })
+          resolve({
+            playIndex, liveStream
+          })
+        }else{
+          let liveStream = res.streams[0];
+          let playingName = res.live;
+          this.setData({
+            liveStream,
+            playingName,
+            channelInfo: res,
+          })
+          resolve({
+            liveStream
+          })
+        }
+        
         setTimeout(() => {
           wx.hideLoading()
         }, 20)
-        resolve(playIndex)
+        
       })
     })
   },
@@ -225,28 +241,32 @@ Page({
     let index = dataset.index
     let liveIndex = dataset.liveindex
     let isToday = parseInt(dataset.istoday)
+    if(src) {
+      setTimeout(() => {
+        if (isToday && index == liveIndex) {
+          this.setData({
+            isShowLive: true
+          })
+        } else {
+          this.setData({
+            isShowLive: false
+          })
+        }
+      }, 20)
+      this.setData({
+        playingName: playname,
+        isPlayIndex: index
+      })
+      //音频源
+      console.log(src)
+      audioCtx.src = src
+      setTimeout(() => {
+        audioCtx.play()
+      }, 20)
+    }else{
+      return 
+    }
     
-    setTimeout(() => {
-      if (isToday && index == liveIndex) {
-        this.setData({
-          isShowLive: true
-        })
-      } else {
-        this.setData({
-          isShowLive: false
-        })
-      }
-    },20)
-    this.setData({
-      playingName: playname,
-      isPlayIndex: index
-    })
-    //音频源
-    console.log(src)
-    audioCtx.src = src
-    setTimeout(() => {
-      audioCtx.play()
-    }, 20)
   },
   //播放进度条更新
   _timeupdate(audio) {
