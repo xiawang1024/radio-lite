@@ -43,5 +43,4 @@
    <scroll-view wx:else scroll-y class='program-list description'>
     {{channelInfo.description}}
   </scroll-view> 
-  <audio  src="" id="myAudio" ></audio>
 </view>

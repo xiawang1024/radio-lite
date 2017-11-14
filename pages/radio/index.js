@@ -36,7 +36,7 @@ Page({
         }, 20)
       })      
     })
-    
+    this.audioCtx = wx.createAudioContext('myAudio')
   },
   play(e){
     
@@ -44,7 +44,7 @@ Page({
     let streams = e.currentTarget.dataset.streams;
     let cid = e.currentTarget.dataset.cid;
     if (this.data.currentIndex == index) {
-      
+      this.audioCtx.pause()
       this.setData({
         currentIndex: -1
       })
@@ -54,11 +54,20 @@ Page({
         currentIndex: index
       })
     } 
-    wx.navigateTo({
-      url: '/pages/player/index?cid=' + cid,
-    })
+    if(cid < 12) {
+      this.audioCtx.pause()
+      wx.navigateTo({
+        url: '/pages/player/index?cid=' + cid,
+      })
+    }else{
+      this.setSrc(streams)
+    }
+    
   },
-  
+  setSrc(src) {
+    this.audioCtx.setSrc(src)
+    this.audioCtx.play()
+  },
   
   /**
    * 页面相关事件处理函数--监听用户下拉动作

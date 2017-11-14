@@ -2,7 +2,7 @@
 const api = require('../../api/index.js')
 const timeSuffix = ' 00:00:00.0'
 const audioCtx = wx.createInnerAudioContext()
-
+const wxaudioCtx = wx.createAudioContext('myAudio')
 Page({
 
   /**
@@ -47,11 +47,8 @@ Page({
           isLiveIndex: res.playIndex
         })
       }    
-      wx.showModal({
-        title: parseInt(cid) > 11,
-        content: '',
-      })
       setTimeout(() => {
+       
         audioCtx.src = res.liveStream
         // audioCtx.src = 'http://lhttp.qingting.fm/live/4576/64k.mp3'
       }, 20)
