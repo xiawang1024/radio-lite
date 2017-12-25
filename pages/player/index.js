@@ -3,6 +3,7 @@ const api = require('../../api/index.js')
 const timeSuffix = ' 00:00:00.0'
 const audioCtx = wx.createInnerAudioContext()
 const wxaudioCtx = wx.createAudioContext('myAudio')
+
 Page({
 
   /**
@@ -97,10 +98,14 @@ Page({
       })
     })
   },
+  onLaunch() {
+    
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
+    
     setTimeout(() => {
       audioCtx.onPlay(() => {
         this.setData({
