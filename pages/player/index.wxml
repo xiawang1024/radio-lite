@@ -15,7 +15,7 @@
         <text wx:else class='back-icon'>回听</text>
         {{playingName}}
       </view>
-      <slider bindchange="sliderchange" min="0" max="100" activeColor="#0081dc" value="{{audioPercent}}" disabled="{{isShowLive}}"/>
+      <slider block-size='16' bindchanging='audioPause' bindchange='seekAudio' min="0" max="100" activeColor="#0081dc" step="0.01" value="{{audioPercent}}" disabled="{{isShowLive}}"/>
       <view class='play-time'>
         <text class='current'>{{currentTime}}</text>
         <text class='duration'>{{duration}}</text>

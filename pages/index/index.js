@@ -20,6 +20,7 @@ Page({
     })
     //首页数据
     api.getNewsList(this.data.pageIndex).then((res) => {
+      console.log(res.list)
       this.setData({
         newsList: res.list
       })

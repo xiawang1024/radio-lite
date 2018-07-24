@@ -1,21 +1,27 @@
-function formatTime(date) {
-  var year = date.getFullYear()
-  var month = date.getMonth() + 1
-  var day = date.getDate()
-
-  var hour = date.getHours()
-  var minute = date.getMinutes()
-  var second = date.getSeconds()
-
+const formatTime = date => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
 
   return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
 
-function formatNumber(n) {
+const formatNumber = n => {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
 
+const formatPlayTime = interval => {
+  interval = interval | 0
+  const minute = formatNumber(interval / 60 | 0)
+  const second = formatNumber(interval % 60)
+  return `${minute}:${second}`
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  formatPlayTime
 }

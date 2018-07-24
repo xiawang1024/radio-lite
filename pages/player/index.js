@@ -1,8 +1,8 @@
 // pages/player/index.js
 const api = require('../../api/index.js')
 const timeSuffix = ' 00:00:00.0'
-const audioCtx = wx.createInnerAudioContext()
-const wxaudioCtx = wx.createAudioContext('myAudio')
+const backgroundAudioManager = wx.getBackgroundAudioManager()
+const util = require('../../utils/util.js')
 
 Page({
 
@@ -15,6 +15,7 @@ Page({
     channelInfo:{},
     programList:[],
     playingName:'',
+    playingImgUrl:'',
     liveStream:'', //直播流
     isLiveIndex:-1, //直播index
     isToday:true, //是否当天
@@ -48,11 +49,7 @@ Page({
           isLiveIndex: res.playIndex
         })
       }    
-      setTimeout(() => {
-       
-        audioCtx.src = res.liveStream
-        // audioCtx.src = 'http://lhttp.qingting.fm/live/4576/64k.mp3'
-      }, 20)
+      this.listenPlayer(res.liveStream)
     })    
   },
   _fetch(cid, stamp) {
@@ -67,10 +64,11 @@ Page({
           let liveStream = res.streams[0];
           let playingName = res.live;
           let playIndex = this._isPlay(programs)
-
+          let playingImgUrl = res.image
           this.setData({
             liveStream,
             playingName,
+            playingImgUrl,
             isPlayIndex: playIndex,
             channelInfo: res,
             programList: this._createArr(programs)
@@ -98,6 +96,57 @@ Page({
       })
     })
   },
+  listenPlayer(src) {
+    backgroundAudioManager.title = this.data.playingName || "河南广播" ;
+    backgroundAudioManager.src = src;
+    backgroundAudioManager.coverImgUrl = 'http://program.hndt.com' + this.data.playingImgUrl;
+    backgroundAudioManager.protocol = 'hls';
+    backgroundAudioManager.onPlay(() => {
+      this.setData({
+        isPlaying: true
+      })
+      wx.hideLoading()
+    })
+    backgroundAudioManager.onPause(() => {
+      this.setData({
+        isPlaying: false
+      })
+    })
+    backgroundAudioManager.onWaiting(() => {
+      // wx.showLoading({
+      //   title: 'loading...',
+      // })
+    })
+    backgroundAudioManager.onCanplay(() => {
+      backgroundAudioManager.play()
+    })
+    backgroundAudioManager.onTimeUpdate(() => {
+      let { duration, currentTime } = backgroundAudioManager
+      let audioPercent = (currentTime / duration * 100).toFixed(2);
+      duration = util.formatPlayTime(duration)
+      currentTime = util.formatPlayTime(currentTime)
+      this.setData({
+        currentTime,
+        duration,
+        audioPercent
+      })
+    })
+  },
+  seekAudio(event) {
+    let { value } = event.detail
+    let seekTime = backgroundAudioManager.duration * value / 100 | 0;
+    wx.seekBackgroundAudio({
+      position: seekTime,
+      success:() => {
+        setTimeout(() => {
+          backgroundAudioManager.play()
+        })
+      }
+    })    
+  },
+  audioPause() {
+    backgroundAudioManager.pause()
+  },
   onLaunch() {
     
   },
@@ -106,48 +155,14 @@ Page({
    */
   onReady() {
     
-    setTimeout(() => {
-      audioCtx.onPlay(() => {
-        this.setData({
-          isPlaying: true
-        })
-      })
-      audioCtx.onPause(() => {
-        this.setData({
-          isPlaying: false
-        })
-      })
-      audioCtx.onTimeUpdate(() => {
-        this._timeupdate(audioCtx)
-      })
-      audioCtx.onSeeking(() => {
-        this._timeupdate(audioCtx)      
-      })
-      audioCtx.onSeeked(() => {
-        this._timeupdate(audioCtx)
-      })
-    }, 20)
-    audioCtx.autoplay = true;
-    audioCtx.obeyMuteSwitch = false
-    
   },
   //播放暂停
   switchPlayState() {
-    if (audioCtx.paused) {
-      audioCtx.play()
-    }else{
-      audioCtx.pause()
+    if (backgroundAudioManager.paused) {
+      backgroundAudioManager.play()
+    } else {
+      backgroundAudioManager.pause()
     }
-  },
-  //播放进度条拖拽
-  sliderchange(event) {
-    let val = event.detail.value;
-    this.setData({
-      audioPercent: val
-    })
-    let duration = audioCtx.duration;
-    let current = duration * 0.01 * val | 0
-    audioCtx.seek(current)
   },
   /**
    * 生命周期函数--监听页面显示
@@ -263,10 +278,8 @@ Page({
       })
       //音频源
       console.log(src)
-      audioCtx.src = src
-      setTimeout(() => {
-        audioCtx.play()
-      }, 20)
+      // audioCtx.src = src
+      this.listenPlayer(src)
     }else{
       return 
     }
