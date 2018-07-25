@@ -27,7 +27,7 @@
     <view class='time'>
       <picker mode="date" value="{{today}}" start="2016-10-01" end="{{today}}" bindchange="bindDateChange">
         <view class="picker">
-          回听: {{date}}
+          回听: <text style='color:#0081dc'>{{date}}</text>
         </view>
       </picker>
     </view>

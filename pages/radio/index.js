@@ -36,7 +36,7 @@ Page({
         }, 20)
       })      
     })
-    this.audioCtx = wx.createAudioContext('myAudio')
+    
   },
   play(e){
     
@@ -44,7 +44,7 @@ Page({
     let streams = e.currentTarget.dataset.streams;
     let cid = e.currentTarget.dataset.cid;
     if (this.data.currentIndex == index) {
-      this.audioCtx.pause()
+      
       this.setData({
         currentIndex: -1
       })
@@ -54,20 +54,17 @@ Page({
         currentIndex: index
       })
     } 
-    if (cid != 17 && cid != 18 && cid != 19 && cid != 20 && cid != 21 && cid != 22 && cid != 23) {
-      this.audioCtx.pause()
-      wx.navigateTo({
-        url: '/pages/player/index?cid=' + cid,
-      })
-    }else{
-      this.setSrc(streams)
-    }
-    
+    // if (cid != 17 && cid != 18 && cid != 19 && cid != 20 && cid != 21 && cid != 22 && cid != 23) {
+    //   this.audioCtx.pause()
+      
+    // }else{
+    //   this.setSrc(streams)
+    // }
+    wx.navigateTo({
+      url: '/pages/player/index?cid=' + cid,
+    })
   },
-  setSrc(src) {
-    this.audioCtx.setSrc(src)
-    this.audioCtx.play()
-  },
+  
   
   /**
    * 页面相关事件处理函数--监听用户下拉动作

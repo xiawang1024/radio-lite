@@ -111,11 +111,12 @@ Page({
       this.setData({
         isPlaying: false
       })
+      wx.showLoading({
+        title: '音频加载...',
+      })
     })
     backgroundAudioManager.onWaiting(() => {
-      // wx.showLoading({
-      //   title: 'loading...',
-      // })
+      
     })
     backgroundAudioManager.onCanplay(() => {
       backgroundAudioManager.play()
@@ -135,17 +136,25 @@ Page({
   seekAudio(event) {
     let { value } = event.detail
     let seekTime = backgroundAudioManager.duration * value / 100 | 0;
+    backgroundAudioManager.seek(seekTime)
+    backgroundAudioManager.play()
     wx.seekBackgroundAudio({
       position: seekTime,
       success:() => {
         setTimeout(() => {
+         
           backgroundAudioManager.play()
-        })
+        },20)
+      },
+      complete:() => {
+        setTimeout(() => {
+          backgroundAudioManager.play()
+        }, 20)
       }
     })    
   },
   audioPause() {
-    backgroundAudioManager.pause()
+    // backgroundAudioManager.pause()
   },
   onLaunch() {
     
