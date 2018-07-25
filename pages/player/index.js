@@ -111,15 +111,16 @@ Page({
       this.setData({
         isPlaying: false
       })
+     
+    })
+    backgroundAudioManager.onWaiting(() => {
       wx.showLoading({
         title: '音频加载...',
       })
     })
-    backgroundAudioManager.onWaiting(() => {
-      
-    })
     backgroundAudioManager.onCanplay(() => {
       backgroundAudioManager.play()
+      wx.hideLoading()
     })
     backgroundAudioManager.onTimeUpdate(() => {
       let { duration, currentTime } = backgroundAudioManager
